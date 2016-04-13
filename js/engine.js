@@ -23,11 +23,24 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        pause=false,
+        id=0;
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+
+    document.getElementById("stop").addEventListener("click", function(){
+        cancelAnimationFrame(id);
+        doc.body.removeChild(canvas);
+    });
+
+    document.getElementById("start").addEventListener("click", function(){
+        doc.body.appendChild(canvas);
+        main();
+
+    });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -56,7 +69,8 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+         if(pause) return;
+         id = win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -81,6 +95,31 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         // checkCollisions();
+        collision(allEnemies, player);
+
+    }
+
+    function checkCollision(object, player) {
+            console.log(player.x, player.y);
+  // if (player.x > object.x - 83/2 &&
+  //         player.x < object.x + 83/2 &&
+  //         player.y > object.y - 101/2 &&
+  //         player.y < object.y + 101/2) {
+    if(player.x < object.x+90 &&
+        player.x + 90 > object.x &&
+        player.y < object.y+80  &&
+        player.y + 80 > object.y) {
+    player.x = 200;
+    player.y = 300;
+    
+
+  }
+}
+
+    function collision(object, player) {
+        object.forEach(function(enemy) {
+            checkCollision(enemy,player);
+        });
     }
 
     /* This is called by the update function and loops through all of the
@@ -133,6 +172,7 @@ var Engine = (function(global) {
                  * we're using them over and over.
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+
             }
         }
 
@@ -149,6 +189,7 @@ var Engine = (function(global) {
          */
         allEnemies.forEach(function(enemy) {
             enemy.render();
+
         });
 
         player.render();
@@ -160,6 +201,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
