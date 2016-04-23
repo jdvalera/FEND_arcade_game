@@ -26,18 +26,30 @@ var Engine = (function(global) {
         lastTime,
         pause=false,
         id=0;
-
+    var game = doc.getElementById("game");
+    var scoreDisplay = doc.getElementById("score");
+    var score = 0, collide = false;
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+    game.appendChild(canvas);
 
-    document.getElementById("stop").addEventListener("click", function(){
+    doc.getElementById("stop").addEventListener("click", function(){
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
         cancelAnimationFrame(id);
-        doc.body.removeChild(canvas);
+        //pause=true;
+
+        //doc.body.removeChild(canvas);
     });
 
-    document.getElementById("start").addEventListener("click", function(){
-        doc.body.appendChild(canvas);
+    doc.getElementById("start").addEventListener("click", function(){
+        //doc.body.appendChild(canvas);
+        // game.appendChild(canvas);
+        //pause=false;
+         player.y=300;
+         player.x=200;
+        score = 0;
+        scoreDisplay.innerHTML = score;
+        collide = false;
         main();
 
     });
@@ -61,6 +73,33 @@ var Engine = (function(global) {
         update(dt);
         render();
 
+        if(player.y <0) {
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //ctx.font="20px Georgia";
+            //ctx.fillText("YOU WIN!!!!",200,250);
+            score += 1;
+            scoreDisplay.innerHTML = score;
+            player.x = 200;
+            player.y = 300;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //return;
+        }
+
+        if(collide === true) {
+            // game.removeChild(canvas);
+            // game.innerHTML = "GAME OVER";
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+            ctx.fillRect(0, 50, canvas.width, canvas.height-80);
+            ctx.fillStyle = "rgba(255, 255, 255, 1)";
+            ctx.font="40px Georgia";
+            ctx.textAlign = "center";
+            ctx.fillText("GAME OVER",250,250);
+            //score = 0;
+            scoreDisplay.innerHTML = score;
+            return;
+        }
+
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -81,6 +120,10 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
+    }
+
+    function gameOver() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -105,13 +148,14 @@ var Engine = (function(global) {
   //         player.x < object.x + 83/2 &&
   //         player.y > object.y - 101/2 &&
   //         player.y < object.y + 101/2) {
-    if(player.x < object.x+90 &&
-        player.x + 90 > object.x &&
-        player.y < object.y+80  &&
-        player.y + 80 > object.y) {
+    if(player.x < object.x+50 &&
+        player.x + 50 > object.x &&
+        player.y < object.y+50  &&
+        player.y + 50 > object.y) {
     player.x = 200;
     player.y = 300;
-    
+    collide = true;
+
 
   }
 }

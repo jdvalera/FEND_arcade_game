@@ -53,7 +53,7 @@ var Player = function() {
 };
 
 Player.prototype.update = function() {
-    
+
 };
 
 Player.prototype.render = function() {
@@ -62,21 +62,23 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(key) {
     if (key === "left") {
-        if(this.x -100 > -20){
-            this.x = this.x - 100;
+        if(this.x -50 > -20){
+            this.x = this.x - 50;
         }
     } else if(key === "right") {
-        if(this.x + 100 < 500) {
-            this.x = this.x + 100;
+        if(this.x + 50 < 500) {
+            this.x = this.x + 50;
         }
     } else if(key === "up") {
-        this.y = this.y - 83;
-        if(this.y < 0) {
-            this.y = 300;
+        // this.y = this.y - 83;
+        if(this.y > 0) {
+            this.y = this.y - 53;
+            // this.y = 300;
+
         }
     } else if (key === "down") {
-        if(this.y + 83 < 400) {
-        this.y = this.y + 83;
+        if(this.y + 83 < 450) {
+        this.y = this.y + 53;
         }
     }
 };
